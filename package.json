@@ -1,0 +1,13 @@
+{
+  "name": "limbojs",
+  "version": "0.1.0",
+  "private": false,
+  "dependencies": {},
+  "license": "ISC",
+  "keywords": [
+    "limbo",
+    "query language",
+    "web",
+    "API"
+  ]
+}
