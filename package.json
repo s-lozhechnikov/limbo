@@ -2,12 +2,25 @@
   "name": "limbojs",
   "version": "0.1.0",
   "private": false,
-  "dependencies": {},
   "license": "ISC",
   "keywords": [
     "limbo",
     "query language",
     "web",
     "API"
-  ]
+  ],
+  "description": "Limbo js is a proof of concept of the method oriented API approach. It allows as to define and delegate methods which then can be called via special query language. One query can be executed by several resolvers chunk by chunk. The query gets splitted into chunks based on defeined resolvers - one chunk can have only one resolver.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abyrvalg/limbo.git"
+  },
+  "author": "Serhii Lozhechnikov",
+  "bugs": {
+    "url": "https://github.com/abyrvalg/limbo/issues"
+  },
+  "homepage": "https://github.com/abyrvalg/limbo#readme"
 }
