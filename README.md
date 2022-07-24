@@ -1,5 +1,5 @@
 # limbo
-Limbo js is a proof of concept of the method oriented API approach. It allows as to define and delegate methods which then can be called via special query language.
+Limbo js is a proof of concept of the method oriented API approach. It allows as to define and delegate methods which then can be called via special query language. One query can be executed by several resolvers chunk by chunk. The query gets splitted into chunks based on defeined resolvers - one chunk can have only one resolver. 
 
 
 ### addHandler (options : Object)
