@@ -98,7 +98,7 @@ class Run {
         for(let i in this[PRIVATE].handlers){
             let handler = this[PRIVATE].handlers[i];
             if(handler.regExp.test(method)){
-                return Promise.resolve().then(()=>(handler.define ? handler.define(method) : handler.handle)(param));
+                return Promise.resolve().then(()=>handler.handle(param, method));
             }
         }
     }

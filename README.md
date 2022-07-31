@@ -5,8 +5,7 @@ Limbo js is a proof of concept of the method oriented API approach. It allows as
 ### addHandler (options : Object)
 Adds a method handler. The "options" parameter consists of next elements:
 1. regExp : RegExp. Methods which match to the regexp will be processed by current handler
-2. define(optional) : Function(methodName). The function here will be used to define handler. It takes method name as parameter. It should return a function. The method parameter will be passed into the result function. Not needed if "handle" option is passed.
-3. handle(optional) : Function(params). defines the handler for the method. Not needed if "define" option is passed
+2. handle : Function(params, method). defines the handler for the method.
 ```javascript
   const Limbo = require("limbo");
   const instance = new Limbo();

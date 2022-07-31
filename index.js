@@ -90,8 +90,7 @@ class Limbo {
         this[PRIVATE].handlers.push({
             id : obj.id || Symbol(),
             regExp : (typeof obj.regExp == "string" ? new RegExp(obj.regExp) : obj.regExp),
-            handle : obj.handle,
-            define : obj.define
+            handle : obj.handle
         });
     }
     addHandlers(handlers){
