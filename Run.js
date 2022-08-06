@@ -77,7 +77,7 @@ class Run {
         this[PRIVATE].varCount = 0;
         this[PRIVATE].bookmarkCount = 0;
         this[PRIVATE].query = typeof query == "string" ? query
-            .replace(/\"([^"]+)\"|\'([^']+)\'/g, (m, str)=>this.setVar({"true":true, "false":false}[str] || str)) //save strings and booleans
+            .replace(/\"([^"]*)\"|\'([^']*)\'/g, (m, str)=>this.setVar({"true":true, "false":false}[str] || str)) //save strings and booleans
             .replace(/\s+/g, '')
             .split(";").filter(el=>el!=="") : query;
         this[PRIVATE].current = 0;
@@ -243,7 +243,7 @@ class Run {
                                 }
                                 return r;
                             }).catch(e=>{
-                                throw new Error(`Error during executing ${str}. Details: ${e.message}`);
+                                throw new Error(`Error during executing ${str}. Details: ${e.stack}`);
                             });
                         return that.setVar(newProm); 
                     }), stack, newProm);
