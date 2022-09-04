@@ -38,14 +38,16 @@ const ops = [
     {
         regExp : /\$(\w+)\=(.+)/, //assign
         handle : (run, args)=>{
-            if(args[1] == "undefined") {
-                throw new Error(`righ part is undefined ${args[0]} = ${args[1]}`);
+            if(args[1] === "undefined") {
+                param = null;
             }
-            try {
-                var param = JSON.parse(args[1]);
-            } 
-            catch(e) {
-                throw new Error(e);
+            else {
+                try {
+                    var param = JSON.parse(args[1]);
+                }
+                catch(e) {
+                    throw new Error(e);
+                }
             }
             run.setVar("$"+args[0], param);
             return param;
@@ -54,10 +56,15 @@ const ops = [
     {
         regExp : /^\=\>(.+)/, //return
         handle : (run, args)=>{
-            try {
-                var res = JSON.parse(args[0]);    
-            } catch(e) {
-                throw e;
+            if(args[0] === "undefined") {
+                var res = null;
+            }
+            else {
+                try {
+                    var res = JSON.parse(args[0]);
+                } catch(e) {
+                    throw e;
+                }
             }
             return run.setVar("$__", res);
         }
@@ -233,7 +240,7 @@ class Run {
                                     var path = key.split("."),
                                         val = path.length > 1 ? tools.lookDeep(path.slice(1).join("."), values[index]) : values[index];
                                         args = args.filter(arg=>arg!==undefined).map(arg=>{
-                                            return arg.replace(key, typeof val == "object" && val[SUB_QUERY] ? val[SUB_QUERY] : JSON.stringify(val))
+                                            return arg.replace(key, typeof val == "object" && val !== null && val[SUB_QUERY] ? val[SUB_QUERY] : JSON.stringify(val))
                                         })
                                 });                        
                                 return op.handle(that, args, stack);
@@ -261,7 +268,11 @@ class Run {
                             val = path.length > 1 ? tools.lookDeep(path.slice(1).join("."), values[index]) : values[index];
                             line = line.replace(key, JSON.stringify(val));
                     });
-                    return line == "undefined" ? undefined : JSON.parse(line);
+                    try {
+                        return line == "undefined" ? undefined : JSON.parse(line);
+                    } catch(e) {
+                        throw new Error ("Error durring parsing expression "+line+": invalid JSON")
+                    }
                 });
             });
         })
