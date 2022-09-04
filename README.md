@@ -50,9 +50,9 @@ executes passed query
     } : @{;
       ? $loginStatus.error == "user_not_confirm" @{;
         user_sendConfirm ~ {"email" : "${data.email}"};
-      }
-      =>$loginStatus
-    }
+      };
+      =>$loginStatus;
+    };
   `)
 ```
 
