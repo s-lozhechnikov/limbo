@@ -6,7 +6,7 @@ const ops = [
     {
         regExp : /\!(\$?_?\w+)/, //negative
         handle : (run, args) => {
-            return !JSON.parse(args[0]);
+            return !(args[0] && args[0] !=="undefined" && JSON.parse(args[0]));
         }
     },
     {
@@ -32,7 +32,7 @@ const ops = [
     {
         regExp : /^\?(\$?_?[\w\.]+)(\$_?\w+)(?:\:(\$_\w+))?/, // condition
         handle : (run, args, stack) =>{
-             (args[0] && JSON.parse(args[0])) ? stack.add(args[1]) : (args.length > 2 && stack.add(args[2]))
+             (args[0] && args[0] !== "undefined" && JSON.parse(args[0])) ? stack.add(args[1]) : (args.length > 2 && stack.add(args[2]))
         }
     },
     {
