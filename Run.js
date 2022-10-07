@@ -335,6 +335,7 @@ class Run {
                 resolver : null,
                 lines : []
             }
+            if(~Object.keys(this[PRIVATE].scope).indexOf("$__")) return this[PRIVATE].scope["$__"];
             return this.hasNextLine() ? this.execute() : r;
         });
     }
