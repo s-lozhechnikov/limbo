@@ -145,7 +145,7 @@ class Run {
     splitLine() {
         var that = this;        
         this[PRIVATE].currentLine = this[PRIVATE].currentLine.replace(/\(([^\(]+)\)/, (str, call)=>{
-            let key = this.getNextVarKey();
+            let key = this.getNextVarKey() + '_';
             that[PRIVATE].query.splice(this[PRIVATE].current-1, 0, key+"="+call);
             return key;
         });
@@ -208,7 +208,7 @@ class Run {
                     return this[PRIVATE].scope["$__"];
                 }
                 var resolved = {};
-                keys.forEach((key, index)=>{
+                keys.filter(key=>!(/^\$_\d+^/).test(key)).forEach((key, index)=>{
                     resolved[key.substring(1)] = vals[index];
                 });
                 return resolved;
