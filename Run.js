@@ -208,7 +208,7 @@ class Run {
                     return this[PRIVATE].scope["$__"];
                 }
                 var resolved = {};
-                keys.filter(key=>!(/^\$_\d+^/).test(key)).forEach((key, index)=>{
+                keys.filter(key=>!(/^\$\_\d+$/).test(key)).forEach((key, index)=>{
                     resolved[key.substring(1)] = vals[index];
                 });
                 return resolved;
