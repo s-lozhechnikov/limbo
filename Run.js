@@ -202,13 +202,13 @@ class Run {
     }
     getResolvedScope(){
         this[PRIVATE].prom = this[PRIVATE].prom.then(()=>{
-            var keys = Object.keys(this[PRIVATE].scope);
+            var keys = Object.keys(this[PRIVATE].scope).filter(key=>!(/^\$\_\d+$/).test(key));
             return Promise.all(keys.map(key=>this[PRIVATE].scope[key])).then(vals=>{
                 if(~keys.indexOf("$__")) {
                     return this[PRIVATE].scope["$__"];
                 }
                 var resolved = {};
-                keys.filter(key=>!(/^\$\_\d+$/).test(key)).forEach((key, index)=>{
+                keys.forEach((key, index)=>{
                     resolved[key.substring(1)] = vals[index];
                 });
                 return resolved;
