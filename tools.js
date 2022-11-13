@@ -16,6 +16,8 @@ module.exports = {
 		return (line.match(/\w+\~/g) || []).filter((el, index, arr)=>arr.indexOf(el) == index)
 			.map(el=>el.replace(/\~/g, '')); 
 	},
+	getDependent : line=>(line.match(/\$_?\w+_?[^\=]/g) || []).filter((el, index, arr)=>arr.indexOf(el) == index).map(el=>el.substr(0, el.length-1)),
+	getAssigned : line=>(line.match(/\$_?\w+_?\=/g) || []).filter((el, index, arr)=>arr.indexOf(el) == index).map(el=>el.substr(0, el.length-1)),
 	getBalance(line){
 		return (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
 	},

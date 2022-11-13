@@ -78,8 +78,9 @@ const ops = [
 ]
 
 class Run {
-    constructor(query, handlers, localResolver, getResolvers) {
+    constructor(query, handlers, localResolver, getResolvers, options) {
         this[PRIVATE] = {};
+        this[PRIVATE].options = options;
         this[PRIVATE].scope = {};
         this[PRIVATE].varCount = 0;
         this[PRIVATE].bookmarkCount = 0;
@@ -95,7 +96,9 @@ class Run {
         this[PRIVATE].currentChunk = {
             resolver : null,
             lines : [],
-            score : 0
+            score : 0,
+            needs : [],
+            resolves : []
         }
         this[PRIVATE].localResolver = localResolver;
         this[PRIVATE].handlers = handlers;
@@ -242,7 +245,7 @@ class Run {
                                         args = args.filter(arg=>arg!==undefined).map(arg=>{
                                             return arg.replace(key, typeof val == "object" && val !== null && val[SUB_QUERY] ? val[SUB_QUERY] : JSON.stringify(val))
                                         })
-                                });                        
+                                });
                                 return op.handle(that, args, stack);
                             }).then(r=>{
                                 if(that.getVar("$__") || that.getVar("$@")) {
@@ -301,15 +304,22 @@ class Run {
             if(resolvers.length > 1) {
                 this.splitLine();
                 continue;
-            }            
+            }
+
+            this[PRIVATE].currentChunk.resolves = this[PRIVATE].currentChunk.resolves.contact(
+                tools.getAssigned(line)).filter((el, index, arr)=>arr.indexOf(el) == index);
+            this[PRIVATE].currentChunk.needs = this[PRIVATE].currentChunk.needs.contact(
+                tools.getDependent(line).filter(el=>!~this[PRIVATE].currentChunk.resolves.indexOf(el)))
+                    .filter((el, index, arr)=>arr.indexOf(el) == index);
+            
             this[PRIVATE].currentChunk.score = this[PRIVATE].score;
             if(this.readyToResolve(resolvers[0])) {
                 if(this[PRIVATE].currentChunk.score > 0) {
                     this.adjustChunk();
                     continue;
                 }
-                this[PRIVATE].current--;       
-                return this.resolveChunk({
+                this[PRIVATE].current--;    
+                this.resolveChunk({
                     resolver : this[PRIVATE].currentChunk.resolver,
                     lines : this[PRIVATE].currentChunk.lines.join(";").split(";")
                 });
@@ -317,6 +327,7 @@ class Run {
         }
         return this.resolveChunk().then(()=>this.getResolvedScope());
     }
+
     resolveChunk(chunk) {
         chunk = chunk || this[PRIVATE].currentChunk;
         let query = chunk.lines.join(";");
@@ -346,24 +357,6 @@ class Run {
             return false;
         }
         return true;
-    }
-    checkDelegate(resolver) {
-        if(!readyToResolve(resolver)) {
-            return;
-        }
-        this[PRIVATE].currentChunk.score = this[PRIVATE].score;
-        if(this[PRIVATE].currentChunk.score > 0) {
-            this.adjustChunk();
-            return;
-        }
-        this.resolveChunk({
-            resolver : this[PRIVATE].currentChunk.resolver,
-            lines : this[PRIVATE].currentChunk.lines.join(";").split(";")
-        });
-        this[PRIVATE].currentChunk = {
-            resolver : resolver,
-            lines : [this[PRIVATE].currentLine]
-        }
     }
 }
 

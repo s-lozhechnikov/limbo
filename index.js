@@ -98,11 +98,11 @@ class Limbo {
             this.addHandler(handler);
         })
     }
-    call(query) {
+    call(query, options) {
         if(typeof query != "string") {
-            throw new Error(`Query must be string. ${typeof query} is providedcons`);
+            throw new Error(`Query must be string. ${typeof query} is provided`);
         }
-        var run = new Run(query, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers);
+        var run = new Run(query, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers, options);
         return run.execute();
     }
 }
