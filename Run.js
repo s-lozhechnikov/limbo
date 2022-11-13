@@ -160,13 +160,13 @@ class Run {
         var bookmark = this.getNextBookmarkKey();
         this[PRIVATE].bookmarks[bookmark] = this[PRIVATE].current;
         this[PRIVATE].currentChunk.lines.push(`->${bookmark}`);        
-        var score = 0;        
+        var score = 0;     
         while(score >= 0) {
             let line = this.getNextLine(),
                 balance = tools.getBalance(line);
             score += balance;
             this[PRIVATE].score += balance;
-            if(score == 0 && ~line.indexOf("}") && ~line.indexOf("}") < line.indexOf("}")) {
+            if(score == 0 && ~line.indexOf("}") && (line.indexOf("}") < line.indexOf("}"))) {
                 score --;
             }
         }
@@ -346,24 +346,6 @@ class Run {
             return false;
         }
         return true;
-    }
-    checkDelegate(resolver) {
-        if(!readyToResolve(resolver)) {
-            return;
-        }
-        this[PRIVATE].currentChunk.score = this[PRIVATE].score;
-        if(this[PRIVATE].currentChunk.score > 0) {
-            this.adjustChunk();
-            return;
-        }
-        this.resolveChunk({
-            resolver : this[PRIVATE].currentChunk.resolver,
-            lines : this[PRIVATE].currentChunk.lines.join(";").split(";")
-        });
-        this[PRIVATE].currentChunk = {
-            resolver : resolver,
-            lines : [this[PRIVATE].currentLine]
-        }
     }
 }
 
