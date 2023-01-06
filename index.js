@@ -99,10 +99,12 @@ class Limbo {
         })
     }
     call(query) {
-        if(typeof query != "string") {
-            throw new Error(`Query must be string. ${typeof query} is providedcons`);
+
+        var {query, params} = typeof query != "string" ? query : {query: query, params: {}};
+        if(typeof query !== 'string' || typeof params !== 'object') {
+            throw new Error("Incorect input");
         }
-        var run = new Run(query, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers);
+        var run = new Run({query, params}, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers);
         return run.execute();
     }
 }

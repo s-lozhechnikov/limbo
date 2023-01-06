@@ -78,9 +78,9 @@ const ops = [
 ]
 
 class Run {
-    constructor(query, handlers, localResolver, getResolvers) {
+    constructor({query, params}, handlers, localResolver, getResolvers) {
         this[PRIVATE] = {};
-        this[PRIVATE].scope = {};
+        this[PRIVATE].scope = params || {};
         this[PRIVATE].varCount = 0;
         this[PRIVATE].bookmarkCount = 0;
         this[PRIVATE].query = typeof query == "string" ? query
