@@ -80,7 +80,12 @@ const ops = [
 class Run {
     constructor({query, params}, handlers, localResolver, getResolvers) {
         this[PRIVATE] = {};
-        this[PRIVATE].scope = params || {};
+        this[PRIVATE].scope = {};
+        if(params) {
+            Object.keys(params).map(key=>{
+                this[PRIVATE].scope['$'+key] = params[key];
+            });
+        }
         this[PRIVATE].varCount = 0;
         this[PRIVATE].bookmarkCount = 0;
         this[PRIVATE].query = typeof query == "string" ? query
