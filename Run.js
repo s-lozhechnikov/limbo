@@ -89,7 +89,7 @@ class Run {
         this[PRIVATE].varCount = 0;
         this[PRIVATE].bookmarkCount = 0;
         this[PRIVATE].query = typeof query == "string" ? query
-            .replace(/\"([^"]*)\"|\'([^']*)\'/g, (m, str)=>this.setVar({"true":true, "false":false}[str] || str)) //save strings and booleans
+            .replace(/\"([^"]*)\"|\'([^']*)\'/g, (m, str)=>this.setVar(str)) //save strings
             .replace(/\s+/g, '')
             .split(";").filter(el=>el!=="") : query;
         this[PRIVATE].current = 0;
@@ -237,7 +237,7 @@ class Run {
                 if(op.regExp.test(line)) {      
                     let newProm;    
                     return that.executeLine(line.replace(op.regExp, function(str){
-                        var args = Object.values(arguments);
+                        var args = Object.values(arguments);                        
                         args = args.slice(1, args.length - 2);
                         var paramMap = that.getParamsFromQuery(str),
                             newProm = Promise.all(Object.values(paramMap)).then(values=>{                      
