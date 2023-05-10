@@ -255,7 +255,9 @@ class Run {
                                 }
                                 return r;
                             }).catch(e=>{
-                                throw new Error(`Error during executing ${str}. Details: ${e.stack}`);
+                                throw new Error(`Error during executing ${str.replace(/\$[\_\w]+/g, (m)=>{
+                                    return paramMap[m];
+                                })}. Details: ${e.stack}`);
                             });
                         return that.setVar(newProm); 
                     }), stack, newProm);
