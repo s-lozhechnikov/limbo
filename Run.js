@@ -24,6 +24,39 @@ const ops = [
         }
     },
     {
+        regExp : /(\$?_?\w+)\+(\$?_?\w+)/, //plus
+        handle : (run, args)=>{
+            let arg1 = args[0] === 'undefined' ? undefined : JSON.parse(args[0]),
+                arg2 = args[1] === 'undefined' ? undefined : JSON.parse(args[1]);
+            if(!Array.isArray(arg1) && !Array.isArray(arg2)) {
+                return arg1 + arg2;
+            } 
+            else if(!Array.isArray(arg1)) {
+                arg2.unshift(arg1);
+                return arg2;
+            }
+            else if(!Array.isArray(arg2)) {
+                arg1.push(arg2);
+                return arg1;
+            } 
+            else {
+                return arg1.concat(arg2);
+            }
+        }
+    },
+    {
+        regExp : /(\$?_?\w+)\&\&(\$?_?\w+)/, //and
+        handle : (run, args)=>{
+            return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) && (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
+        }
+    },
+    {
+        regExp : /(\$?_?\w+)\|\|(\$?_?\w+)/, //or
+        handle : (run, args)=>{
+            return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) || (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
+        }
+    },
+    {
         regExp : /(\w+)\~(.+)?/, //execute
         handle : (run, args) => {
             return run.handle(args[0], (args[1] && JSON.parse(args[1])))

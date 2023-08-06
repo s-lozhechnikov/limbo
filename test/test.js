@@ -85,7 +85,75 @@ describe('single instance', ()=>{
 			//console.log(r);
 			assert.equal(JSON.stringify(r), '{"a":"bla"}')
 		})
-    })
+    });
+
+	it('logical and', ()=>{
+		return inst1.call(`
+			$two = 2;
+			$three = 3;
+			? $two == 2 && $three == 3 @{;
+				? $two == 2 && $three != 3 @{;
+					=>"incorect";
+				} : @{;
+					=>"correct"
+				};
+			} : @{;
+				=>"incorect";
+			};
+		`).then(r=>assert.equal(r, "correct"))
+	});
+
+	it('logical or', ()=>{
+		return inst1.call(`
+			$two = 2;
+			$three = 3;
+			? $two != 2 || $three != 3 @{;
+				=>"incorect"
+			} : @{;
+				? $two != 2 || $three == 3 @{;
+					=>"correct";
+				} : @{;
+					=>"incorect"
+				};
+			};
+		`).then(r=>assert.equal(r, "correct"))
+	});
+
+	it('plus int', ()=>{
+		return inst1.call(`
+			=>2+1;
+		`).then(r=>assert.equal(r, 3))
+	});
+
+	it('plus str', ()=>{
+		return inst1.call(`
+			=>"str1"+"str2";
+		`).then(r=>assert.equal(r, "str1str2"))
+	});
+
+	it('plus arrs', ()=>{
+		return inst1.call(`
+			$arr1 = [1,2,3];
+			$arr2 = [4,5,6];
+			=>$arr1 + $arr2;
+		`).then(r=>assert.equal(JSON.stringify(r), "[1,2,3,4,5,6]"))
+	});
+
+	it('arr plus num', ()=>{
+		return inst1.call(`
+			$arr = [1,2,3];
+			$num = 4;
+			=>$arr + $num;
+		`).then(r=>assert.equal(JSON.stringify(r), "[1,2,3,4]"))
+	});
+
+	it('num plus arr', ()=>{
+		return inst1.call(`
+			$arr = [1,2,3];
+			$num = 0;
+			=>$num + $arr;
+		`).then(r=>assert.equal(JSON.stringify(r), "[0,1,2,3]"))
+	});
 });
 
 describe('delegation', ()=>{
@@ -180,7 +248,7 @@ describe('delegation', ()=>{
         }).then(r=>{
 			assert.equal(JSON.stringify(r), '{"meth":1,"m":4}');
 		});
-    })
+    });
 });
 
 
