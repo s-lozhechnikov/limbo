@@ -68,6 +68,30 @@ describe('single instance', ()=>{
 		});
     });
 
+	it('comparing equals object properties', ()=>{
+        return inst1.call(`$a = {"a" : 2};
+		$b = {"b" : 2};
+		? $a.a == $b.b @{;
+			=>true;
+		} : @{;
+			=>false;
+		}`).then(r=>{
+			assert.equal(r, true);
+		});
+    });
+
+	it('comparing not equals object properties', ()=>{
+        return inst1.call(`$a = {"a" : 2};
+		$b = {"b" : 2};
+		? $a.a != $b.b @{;
+			=>true;
+		} : @{;
+			=>false;
+		}`).then(r=>{
+			assert.equal(r, false);
+		});
+    });
+
     it('negotiation, retruning null', ()=>{
         return inst1.call(`$a = p2 ~;
 		? !$a @{;
