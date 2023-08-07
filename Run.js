@@ -24,7 +24,7 @@ const ops = [
         }
     },
     {
-        regExp : /(\$?_?\w+)\+(\$?_?\w+)/, //plus
+        regExp : /(\$?_?[\w\.]+)\+(\$?_?[\w\.]+)/, //plus
         handle : (run, args)=>{
             let arg1 = args[0] === 'undefined' ? undefined : JSON.parse(args[0]),
                 arg2 = args[1] === 'undefined' ? undefined : JSON.parse(args[1]);
@@ -45,13 +45,13 @@ const ops = [
         }
     },
     {
-        regExp : /(\$?_?\w+)\&\&(\$?_?\w+)/, //and
+        regExp : /(\$?_?[\w\.]+)\&\&(\$?_?[\w\.]+)/, //and
         handle : (run, args)=>{
             return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) && (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
         }
     },
     {
-        regExp : /(\$?_?\w+)\|\|(\$?_?\w+)/, //or
+        regExp : /(\$?_?[\w\.]+)\|\|(\$?_?[\w\.]+)/, //or
         handle : (run, args)=>{
             return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) || (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
         }
