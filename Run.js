@@ -18,9 +18,9 @@ const ops = [
         }
     },
     {
-        regExp : /(\$?_?[\w\.]+)\!\=(\$?_?[\w\.]+)/, //is unequal
+        regExp : /(\$?_?[\w\.]+)(\!\=\=?)(\$?_?[\w\.]+)/, //is unequal
         handle : (run, args)=>{
-            return JSON.parse(args[0]) != JSON.parse(args[1])
+            return args[1] == "!==" ? JSON.parse(args[0]) !== JSON.parse(args[2]) : JSON.parse(args[0]) != JSON.parse(args[2])
         }
     },
     {

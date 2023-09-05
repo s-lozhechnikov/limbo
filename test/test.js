@@ -56,7 +56,7 @@ describe('single instance', ()=>{
 		});
     });
 
-    it('comparing equals', ()=>{
+    it('comparing equals==', ()=>{
         return inst1.call(`$a = 2;
 		$b = 2;
 		? $a == $b @{;
@@ -68,6 +68,44 @@ describe('single instance', ()=>{
 		});
     });
 
+	it('comparing equals ===', ()=>{
+        return inst1.call(`$a = "2";
+		$aa=2;
+		$b = 2;
+		? $a === $b @{;
+			$c = true;
+		} : @{;
+			$c = false;
+		};
+		? $aa === $b @{;
+			$d = true;
+		} : @{;
+			$d = false;
+		};
+		=>{"c" : $c, "d" : $d};
+		`).then(r=>{
+			assert.equal(JSON.stringify(r), '{"c":false,"d":true}');
+		});
+    });
+	it('comparing not equals !==', ()=>{
+        return inst1.call(`$a = "2";
+		$aa=2;
+		$b = 2;
+		? $a !== $b @{;
+			$c = true;
+		} : @{;
+			$c = false;
+		};
+		? $aa != $b @{;
+			$d = true;
+		} : @{;
+			$d = false;
+		};
+		=>{"c" : $c, "d" : $d};
+		`).then(r=>{
+			assert.equal(JSON.stringify(r), '{"c":true,"d":false}');
+		});
+    });
 	it('comparing equals object properties', ()=>{
         return inst1.call(`$a = {"a" : 2};
 		$b = {"b" : 2};
