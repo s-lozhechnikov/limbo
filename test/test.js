@@ -48,10 +48,10 @@ describe('single instance', ()=>{
         return inst1.call(`
             $m1 = returnTrue~;
 			? $m1 @{;
-				=>"true"
+				=>"true";
 			} : @{;
-				=>"false"
-			}`).then(r=>{
+				=>"false";
+			};`).then(r=>{
 				assert.equal(r, "true");
 		});
     });
@@ -135,7 +135,7 @@ describe('single instance', ()=>{
 		? !$a @{;
 			=>null;
 		} : @{;
-			=>"null1"
+			=>"null1";
 		};
 		=>$a;`).then(r=>{
 			assert.equal(r, null);
@@ -157,25 +157,27 @@ describe('single instance', ()=>{
 				? $two == 2 && $three != 3 @{;
 					=>"incorect";
 				} : @{;
-					=>"correct"
+					=>"correct";
 				};
 			} : @{;
 				=>"incorect";
 			};
 		`).then(r=>assert.equal(r, "correct"))
 	});
-
+	it('another or', ()=>{
+		return inst1.call(`$a = ("bbbb" || "aaa"); =>$a;`).then(r=>assert.equal(r, "bbbb"));
+	});
 	it('logical or', ()=>{
 		return inst1.call(`
 			$two = 2;
 			$three = 3;
 			? $two != 2 || $three != 3 @{;
-				=>"incorect"
+				=>"incorect";
 			} : @{;
 				? $two != 2 || $three == 3 @{;
 					=>"correct";
 				} : @{;
-					=>"incorect"
+					=>"incorect";
 				};
 			};
 		`).then(r=>assert.equal(r, "correct"))

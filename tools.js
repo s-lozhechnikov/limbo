@@ -50,5 +50,112 @@ module.exports = {
         for (var i = 0; i < length; i++)
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         return text;
-    }
+    },
+	ops : [
+		{
+			regExp : /\!(\$?_?\w+)/, //negative
+			handle : (run, args) => {
+				return !(args[0] && args[0] !=="undefined" && JSON.parse(args[0]));
+			}
+		},
+		{
+			regExp : /(\$?_?[\w\.]+)(\=\=\=?)(\$?_?[\w\.]+)/, //is equal
+			handle : (run, args)=>{ 
+				return args[1] == "===" ? 
+					((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) === (args[2] === 'undefined' ? undefined : JSON.parse(args[2]))) : 
+					((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) == (args[2] === 'undefined' ? undefined : JSON.parse(args[2])))
+			}
+		},
+		{
+			regExp : /(\$?_?[\w\.]+)(\!\=\=?)(\$?_?[\w\.]+)/, //is unequal
+			handle : (run, args)=>{
+				return args[1] == "!==" ? JSON.parse(args[0]) !== JSON.parse(args[2]) : JSON.parse(args[0]) != JSON.parse(args[2])
+			}
+		},
+		{
+			regExp : /(\$?_?[\w\.]+)\+(\$?_?[\w\.]+)/, //plus
+			handle : (run, args)=>{
+				var arg1 = args[0] === 'undefined' ? undefined : JSON.parse(args[0]),
+					arg2 = args[1] === 'undefined' ? undefined : JSON.parse(args[1]);
+				if(!Array.isArray(arg1) && !Array.isArray(arg2)) {
+					return arg1 + arg2;
+				} 
+				else if(!Array.isArray(arg1)) {
+					arg2.unshift(arg1);
+					return arg2;
+				}
+				else if(!Array.isArray(arg2)) {
+					arg1.push(arg2);
+					return arg1;
+				} 
+				else {
+					return arg1.concat(arg2);
+				}
+			}
+		},
+		{
+			regExp : /(\$?_?[\w\.]+)\&\&(\$?_?[\w\.]+)/, //and
+			handle : (run, args)=>{
+				return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) && (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
+			}
+		},
+		{
+			regExp : /(\$?_?[\w\.]+)\|\|(\$?_?[\w\.]+)/, //or
+			handle : (run, args)=>{
+				return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) || (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
+			}
+		},
+		{
+			regExp : /(\w+)\~(.+)?/, //execute
+			handle : (run, args) => {
+				return run.handle(args[0], (args[1] && JSON.parse(args[1])))
+			}
+		},
+		{
+			regExp : /^\?(\$?_?[\w\.]+)(\$_?\w+)(?:\:(\$_\w+))?/, // condition
+			handle : (run, args, stack) =>{
+				 (args[0] && args[0] !== "undefined" && JSON.parse(args[0])) ? stack.add(args[1]) : (args.length > 2 && stack.add(args[2]))
+			}
+		},
+		{
+			regExp : /\$(\w+)\=(.+)/, //assign
+			handle : (run, args)=>{
+				if(args[1] === "undefined") {
+					param = null;
+				}
+				else {
+					try {
+						var param = JSON.parse(args[1]);
+					}
+					catch(e) {
+						throw new Error(e);
+					}
+				}
+				run.setVar("$"+args[0], param);
+				return param;
+			}
+		},
+		{
+			regExp : /^\=\>(.+)/, //return
+			handle : (run, args)=>{
+				if(args[0] === "undefined") {
+					var res = null;
+				}
+				else {
+					try {
+						var res = JSON.parse(args[0]);
+					} catch(e) {
+						throw e;
+					}
+				}
+				return run.setVar("$__", res);
+			}
+		},
+		{
+			regExp : /^\-\>@_(\d+)/, //return bookmark
+			handle : (run, args)=>{
+				return run.setVar("$@", args[0]);
+			}
+		}
+	]
 }
