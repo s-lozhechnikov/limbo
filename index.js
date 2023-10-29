@@ -103,7 +103,7 @@ class Limbo {
                                     args = args.slice(1, args.length - 2).map(arg=>arg && arg.replace(/\$_?[\w\.]+/g, (key)=>{
                                         if(buffer[key.split(".")[0]] === undefined) return key;                                    
                                         var val = tools.lookDeep(key, buffer);
-                                        return JSON.stringify(val);
+                                        return JSON.stringify(val || 'res');
                                     }));                   
                                     return run.setVar(op.handle(run, args));
                                 });
@@ -114,7 +114,7 @@ class Limbo {
                         throw `syntax error in query ${query.replace(/\s+/g, ' ')}; line ${line.replace(/\$_?[\w\.]+/g, key=>{
                             if(buffer[key.split(".")[0]] === undefined) return key;                                    
                             var val = tools.lookDeep(key, buffer);
-                            return JSON.stringify(val);
+                            return JSON.stringify(val || 'res');
                         })}`;
                     }
                 }
@@ -177,7 +177,11 @@ class Limbo {
         if(typeof query !== 'string' || typeof params !== 'object') {
             throw new Error("Incorect input");
         }
-        this[PRIVATE].validate(query, params);
+        try {
+            this[PRIVATE].validate(query, params);
+        } catch(err) {
+            Promise.reject(err);
+        }
         var run = new Run({query, params}, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers);
         return run.execute();
     }
