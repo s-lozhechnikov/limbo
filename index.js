@@ -66,7 +66,7 @@ class Limbo {
             validate(query, params) {
                 var buffer = {};
                 if(query.length > that[PRIVATE].QUERY_LENGTH) {
-                    throw `query length exceeds the limit. limit = ${that[PRIVATE].QUERY_LENGTH}, actual = ${query.length}`
+                    throw new Error(`query length exceeds the limit. limit = ${that[PRIVATE].QUERY_LENGTH}, actual = ${query.length}`);
                 }
                 if(params){
                     Object.keys(params).map(key=>{
@@ -111,11 +111,11 @@ class Limbo {
                         return line;
                     }
                     catch(err) {
-                        throw `syntax error in query ${query.replace(/\s+/g, ' ')}; line ${line.replace(/\$_?[\w\.]+/g, key=>{
+                        throw new Error(`syntax error in query ${query.replace(/\s+/g, ' ')}; line ${line.replace(/\$_?[\w\.]+/g, key=>{
                             if(buffer[key.split(".")[0]] === undefined) return key;                                    
                             var val = tools.lookDeep(key, buffer);
                             return JSON.stringify(val || 'res');
-                        })}`;
+                        })}`);
                     }
                 }
                 var resArr = queryArr.map(line=>{
@@ -127,7 +127,7 @@ class Limbo {
                     return reduceLine(line);
                 });
                 if(Object.keys(buffer).length > that[PRIVATE].VARIABLE_COUNT) {
-                    throw `query complexety exceeds the limit. limit = ${that[PRIVATE].VARIABLE_COUNT}, actual = ${buffer.keys(buffer).length}`
+                    throw new Error(`query complexety exceeds the limit. limit = ${that[PRIVATE].VARIABLE_COUNT}, actual = ${buffer.keys(buffer).length}`);
                 }
                 return true;
             }
@@ -177,11 +177,7 @@ class Limbo {
         if(typeof query !== 'string' || typeof params !== 'object') {
             throw new Error("Incorect input");
         }
-        try {
-            this[PRIVATE].validate(query, params);
-        } catch(err) {
-            Promise.reject(err);
-        }
+        this[PRIVATE].validate(query, params);
         var run = new Run({query, params}, this[PRIVATE].handlers, this.getLocalResolver(), this[PRIVATE].getResolvers);
         return run.execute();
     }
