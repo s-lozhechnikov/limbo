@@ -218,11 +218,22 @@ describe('single instance', ()=>{
 			=>$num + $arr;
 		`).then(r=>assert.equal(JSON.stringify(r), "[0,1,2,3]"))
 	});
-
+	
 	it('minus int', ()=>{
 		return inst1.call(`
 			=>2-3;
 		`).then(r=>assert.equal(r, -1))
+	});
+
+	it('nul param handling', ()=>{
+		return inst1.call({
+			query : `
+				? !$param @{;
+					=>"params is null";
+				};
+			`,
+			params : {param : null}
+		}).then(r=>assert.equal(r, "params is null"))
 	});
 });
 
@@ -320,11 +331,3 @@ describe('delegation', ()=>{
 		});
     });
 });
-
-
-
-
-
-
-
-

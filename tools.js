@@ -69,7 +69,9 @@ module.exports = {
 		{
 			regExp : /(\$?_?[\w\.]+)(\!\=\=?)(\$?_?[\w\.]+)/, //is unequal
 			handle : (run, args)=>{
-				return args[1] == "!==" ? JSON.parse(args[0]) !== JSON.parse(args[2]) : JSON.parse(args[0]) != JSON.parse(args[2])
+				return args[1] == "!==" ? 
+				((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) !== (args[2] === 'undefined' ? undefined : JSON.parse(args[2]))) : 
+				((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) != (args[2] === 'undefined' ? undefined : JSON.parse(args[2])))
 			}
 		},
 		{

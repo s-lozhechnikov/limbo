@@ -112,7 +112,7 @@ class Limbo {
                     }
                     catch(err) {
                         throw new Error(`syntax error in query ${query.replace(/\s+/g, ' ')}; line ${line.replace(/\$_?[\w\.]+/g, key=>{
-                            if(buffer[key.split(".")[0]] === undefined) return key;                                    
+                            if(buffer[key.split(".")[0]] === undefined) return '"res"';                                    
                             var val = tools.lookDeep(key, buffer);
                             return JSON.stringify(val || 'res');
                         })}`);
