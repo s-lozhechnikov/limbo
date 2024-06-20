@@ -218,6 +218,12 @@ describe('single instance', ()=>{
 			=>$num + $arr;
 		`).then(r=>assert.equal(JSON.stringify(r), "[0,1,2,3]"))
 	});
+
+	it('minus int', ()=>{
+		return inst1.call(`
+			=>2-3;
+		`).then(r=>assert.equal(r, -1))
+	});
 });
 
 describe('delegation', ()=>{

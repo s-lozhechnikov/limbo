@@ -94,6 +94,14 @@ module.exports = {
 			}
 		},
 		{
+			regExp : /(\$?_?[\w\.]+)\-(\$?_?[\w\.]+)/, //minus
+			handle : (run, args)=>{
+				var arg1 = args[0] === 'undefined' ? undefined : JSON.parse(args[0]),
+					arg2 = args[1] === 'undefined' ? undefined : JSON.parse(args[1]);
+				return arg1 - arg2;
+			}
+		},
+		{
 			regExp : /(\$?_?[\w\.]+)\&\&(\$?_?[\w\.]+)/, //and
 			handle : (run, args)=>{
 				return ((args[0] === 'undefined' ? undefined : JSON.parse(args[0])) && (args[1] === 'undefined' ? undefined : JSON.parse(args[1])))
