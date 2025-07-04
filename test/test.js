@@ -189,6 +189,19 @@ describe('single instance', ()=>{
 		`).then(r=>assert.equal(r, 3))
 	});
 
+	it('multiply int', ()=>{
+		return inst1.call(`
+			=>3 * 2;
+		`).then(r=>assert.equal(r, 6))
+	});
+
+	it('divide int', ()=>{
+		return inst1.call(`
+			=>12/3;
+		`).then(r=>assert.equal(r, 4))
+	});
+
+
 	it('plus str', ()=>{
 		return inst1.call(`
 			=>"str1"+"str2";
